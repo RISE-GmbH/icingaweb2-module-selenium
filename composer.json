@@ -1,0 +1,13 @@
+{
+  "name": "moreamazingnick/icingaweb2-module-selenium",
+  "type": "project",
+  "license": "GPL2+",
+  "authors": [
+    {
+      "name": "moreamazingnick"
+    }
+  ],
+  "require": {
+    "php-webdriver/webdriver": "^1.15.1"
+  }
+}

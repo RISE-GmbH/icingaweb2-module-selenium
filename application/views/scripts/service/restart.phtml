@@ -1,0 +1,32 @@
+<?php
+
+use ipl\Web\Widget\Icon;
+
+?>
+<div class="controls">
+    <?= /** @var \Icinga\Web\Widget\Tabs $tabs */ $tabs ?>
+</div>
+<div class="content">
+    <h2>Service:</h2>
+    <?php foreach ($navigation as $item): /** @var \Icinga\Web\Navigation\NavigationItem $item */?>
+        <a class="dashboard-link" href="<?= $this->url($item->getUrl(), $item->getUrlParameters()) ?>"<?= $this->propertiesToString($item->getAttributes()) ?>>
+            <div class="link-icon">
+                <?php
+                if (substr($item->getUrl()->getPath(), 0, 9) === 'icingadb/') {
+                    echo new Icon($item->getIcon(), [ 'aria-hidden' => 1]);
+                } else {
+                    echo $this->icon($item->getIcon() ?: 'forward', null, array('aria-hidden' => true));
+                }
+                ?>
+            </div>
+            <div class="link-meta">
+                <div class="link-label"><?= $this->escape($item->getLabel()) ?></div>
+                <div class="link-description"><?= $this->escape($item->getDescription() ?: sprintf('Open %s', strtolower($item->getLabel()))) ?></div>
+            </div>
+        </a>
+    <?php endforeach ?>
+    <h2>Message:</h2>
+    <pre>
+        <?php echo $status;?>
+    </pre>
+</div>
