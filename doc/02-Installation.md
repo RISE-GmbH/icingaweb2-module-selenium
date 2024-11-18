@@ -5,6 +5,7 @@
 * Icinga Web 2 (&gt;= 2.12.2)
 * Icinga Director (&gt;= 1.11.2)
 * PHP (&gt;= 7.3)
+* php-zip
 * google-chrome-stable
 
 The Icinga Web 2 `monitoring` or `icingadb` module needs to be configured and enabled.
@@ -59,8 +60,9 @@ If you run this as your webserver user the selenium module can later update the 
 
 
 ```
-sudo -u www-data icingacli selenium init
+sudo -u www-data icingacli selenium init --with-commands
 ```
+
 
 ## Icinga Selenium Chrome Web Driver Service 
 
@@ -77,6 +79,13 @@ You can run the following command to enable and start the daemon.
 systemctl enable --now icinga-selenium.service
 ```
 
+In order for the HealthHooks to work you need to provide the following entries in the sudoers file:
+
+```
+www-data ALL = NOPASSWD: /usr/bin/systemctl restart icinga-selenium.service
+www-data ALL = NOPASSWD: /usr/bin/systemctl status icinga-selenium.service
+```
+If your webserver group is not www-data adapt this lines to fit your needs
 
 ## Set a Database / Choose a backend - Web
 
