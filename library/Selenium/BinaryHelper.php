@@ -35,12 +35,17 @@ class BinaryHelper
 
     }
     public function getChromeVersion($location){
+        if(file_exists($location)){
+            exec(escapeshellcmd($location)." ".escapeshellarg(' --version'),$output);
+            $output = implode(" ",$output);
+            $output = explode(" ",$output);
+            $version = array_pop($output);
+            return $version;
+        }else{
+            //TODO return something else but this breaks nothing
+            return "not found";
+        }
 
-        exec(escapeshellcmd($location)." ".escapeshellarg(' --version'),$output);
-        $output = implode(" ",$output);
-        $output = explode(" ",$output);
-        $version = array_pop($output);
-        return $version;
 
     }
 
@@ -76,6 +81,9 @@ class BinaryHelper
         $binary = Module::get('selenium')->getConfigDir().DIRECTORY_SEPARATOR."binaries".DIRECTORY_SEPARATOR.'chromedriver';
         $platform ="linux64";
         $version = $this->getChromeVersion("/usr/bin/google-chrome-stable");
+        if($version === "not found"){
+            return false;
+        }
         $driverVersion = $this->getChromeDriverVersion($binary);
         if($driverVersion === $version){
             #return true;

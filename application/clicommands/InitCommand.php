@@ -38,7 +38,12 @@ class InitCommand extends Command
             }
         }
         $a = new BinaryHelper();
-        $a->update();
+        if($a->update()){
+            echo "Init was successful\n";
+        }else{
+            echo "Init failed\n";
+        }
+
 
     }
 
