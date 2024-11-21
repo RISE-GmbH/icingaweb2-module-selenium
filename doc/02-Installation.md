@@ -50,6 +50,16 @@ After, you can import the schema using the following command:
 mysql -p -u root selenium < /usr/share/icingaweb2/modules/selenium/schema/mysql.schema.sql
 ```
 
+## Provide sudo permissions for www-data
+
+In order for the HealthHooks to work you need to provide the following entries in the sudoers file:
+
+```
+www-data ALL = NOPASSWD: /usr/bin/systemctl restart icinga-selenium.service
+www-data ALL = NOPASSWD: /usr/bin/systemctl status icinga-selenium.service
+```
+If your webserver group is not www-data adapt this lines to fit your needs
+
 ## Download the Selenium Chrome Web Driver
 
 The module needs a webdriver placed under `/etc/icingaweb2/modules/selenium/binaries/chromedriver`.
@@ -78,14 +88,6 @@ You can run the following command to enable and start the daemon.
 ```
 systemctl enable --now icinga-selenium.service
 ```
-
-In order for the HealthHooks to work you need to provide the following entries in the sudoers file:
-
-```
-www-data ALL = NOPASSWD: /usr/bin/systemctl restart icinga-selenium.service
-www-data ALL = NOPASSWD: /usr/bin/systemctl status icinga-selenium.service
-```
-If your webserver group is not www-data adapt this lines to fit your needs
 
 ## Set a Database / Choose a backend - Web
 
