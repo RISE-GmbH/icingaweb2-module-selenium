@@ -62,9 +62,11 @@ class BinaryHelper
     }
 
     public function getVersion($version){
+        $proxy = Module::get('selenium')->getConfig()->get('selenium','proxy');
+
         $host="https://googlechromelabs.github.io";
         $path="/chrome-for-testing/known-good-versions-with-downloads.json";
-        $Connection = new HttpClient($host,null, null,null,true);
+        $Connection = new HttpClient($host,null, null,null,true,$proxy);
         $Request = new Request();
         $Request->setPath($path);
         $Request->setMethod("GET");
@@ -79,6 +81,7 @@ class BinaryHelper
     public function update()
     {
         $binary = Module::get('selenium')->getConfigDir().DIRECTORY_SEPARATOR."binaries".DIRECTORY_SEPARATOR.'chromedriver';
+        $proxy = Module::get('selenium')->getConfig()->get('selenium','proxy');
         $platform ="linux64";
         $version = $this->getChromeVersion("/usr/bin/google-chrome-stable");
         if($version === "not found"){
@@ -108,7 +111,7 @@ class BinaryHelper
                     $binaries = Module::get('selenium')->getConfigDir().DIRECTORY_SEPARATOR."binaries".DIRECTORY_SEPARATOR.$version;
                     $currentDriver = $binaries.DIRECTORY_SEPARATOR."chromedriver-linux64".DIRECTORY_SEPARATOR."chromedriver";
                     $host =$scheme."://".$host;
-                    $Connection = new HttpClient($host,null, null,null,true);
+                    $Connection = new HttpClient($host,null, null,null,true, $proxy);
                     $Request = new Request();
                     $Request->setPath($path);
                     $Request->setMethod("GET");

@@ -21,7 +21,9 @@ abstract class DbModel extends Model
     public function beforeSave(Connection $db){
 
     }
+    public function afterSave(Connection $db){
 
+    }
     public function getColumns(): array
     {
         return array_keys($this->getColumnDefinitions());
@@ -75,6 +77,53 @@ abstract class DbModel extends Model
         }
         $this->beforeSave($db);
 
+        $values = $this->prepare();
+
+        if (!isset ($this->id) || $this->id === null) {
+            $db->insert($this->getTableName(), $values);
+            $this->id = $db->lastInsertId();
+
+        } else {
+            $db->update($this->getTableName(), $values, [$this->getKeyName().' = ?' => $this->id]);
+        }
+
+        $this->afterSave($db);
+
+        if($asTransaction){
+            $db->commitTransaction();
+        }
+
+    }
+
+    public function restore($asTransaction = true)
+    {
+        $db = Database::get();
+        if($asTransaction){
+            $db->beginTransaction();
+        }
+        $this->beforeSave($db);
+
+        $values = $this->prepare();
+        $prevRecord= self::findbyPrimaryKey($this->id);
+        if ($prevRecord === null) {
+            $values['id']=$this->id;
+            $db->insert($this->getTableName(), $values);
+        }else{
+            $db->update($this->getTableName(), $values, [$this->getKeyName().' = ?' => $prevRecord->id]);
+
+        }
+
+        $this->afterSave($db);
+
+        if($asTransaction){
+            $db->commitTransaction();
+        }
+
+    }
+
+    public function prepare()
+    {
+
         $values=[];
         foreach ($this->getColumns() as $column){
             if(isset($this->{$column})){
@@ -92,17 +141,7 @@ abstract class DbModel extends Model
             }
 
         }
-        if (!isset ($this->id) || $this->id === null) {
-            $db->insert($this->getTableName(), $values);
-            $this->id = $db->lastInsertId();
-
-        } else {
-            $db->update($this->getTableName(), $values, [$this->getKeyName().' = ?' => $this->id]);
-        }
-        if($asTransaction){
-            $db->commitTransaction();
-        }
-
+        return $values;
     }
     public static function findbyPrimaryKey($id){
         $db = Database::get();

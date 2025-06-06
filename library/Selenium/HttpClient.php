@@ -52,6 +52,13 @@ class HttpClient
     protected $insecure;
 
     /**
+     * use this proxy for connection
+     *
+     * @var string
+     */
+    protected $proxy;
+
+    /**
      * Create a new RestApiClient
      *
      * @param   string  $host               The host of the API
@@ -59,14 +66,16 @@ class HttpClient
      * @param   string  $pass               The password for the user the API is accessed with
      * @param   string  $certificatePath    The path of a file holding one or more certificates to verify the peer with
      * @param   boolean  $insecure          Do not Check ssl at all
+     * @param   string  $proxy              use this proxy for connection
      */
-    public function __construct($host, $user = null, $pass = null, $certificatePath = null, bool $insecure = false)
+    public function __construct($host, $user = null, $pass = null, $certificatePath = null, bool $insecure = false, $proxy = null)
     {
         $this->host = $host;
         $this->user = $user;
         $this->pass = $pass;
         $this->certificatePath = $certificatePath;
         $this->insecure = $insecure;
+        $this->proxy = $proxy;
     }
 
     /**
@@ -97,6 +106,10 @@ class HttpClient
         curl_setopt($curl, CURLOPT_HEADER, true);
         curl_setopt($curl, CURLOPT_FAILONERROR, false);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+        if ($this->proxy !== null) {
+            curl_setopt($curl, CURLOPT_PROXY, $this->proxy);
+        }
 
         if ($this->certificatePath !== null) {
             curl_setopt($curl, CURLOPT_CAINFO, $this->certificatePath);

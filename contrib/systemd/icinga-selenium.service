@@ -3,7 +3,7 @@ Description=Icinga Selenium Chrome Driver
 
 [Service]
 Type=simple
-ExecStart=/etc/icingaweb2/modules/selenium/binaries/chromedriver --verbose --port=9515
+ExecStart=/etc/icingaweb2/modules/selenium/binaries/chromedriver --port=9515
 Restart=on-success
 User=root
 

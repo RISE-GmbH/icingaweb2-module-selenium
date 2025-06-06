@@ -91,7 +91,7 @@ class TestsuiteController extends Controller
 
         $this->setTitle($this->translate('New Testsuite'));
 
-        $values = [];
+        $values = ['proxy'=>$this->Config()->get('selenium','proxy')];
 
         $form = (TestsuiteForm::fromId(null))->setDb($this->db)
             ->setAction((string) Url::fromRequest())->setRenderCreateAndShowButton(false)

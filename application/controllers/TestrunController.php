@@ -31,9 +31,7 @@ class TestrunController extends Controller
 
     public function init()
     {
-        if(!$this->Auth()->hasPermission("selenium/testrun/modify")){
-            throw new HttpException(401,"Not allowed!");
-        }
+
         $this->db=Database::get();
 
     }
@@ -63,11 +61,11 @@ class TestrunController extends Controller
 
         $data = json_decode($testrun->result,true);
         if($testrun->status === 'success'){
-            $this->addContent(Html::tag('h1',['style'=>"color:green;"],"Testrun was successful"));
+            $this->addContent(Html::tag('h1',['class'=>"color-green;"],"Testrun was successful"));
         }elseif($testrun->status === 'running'){
-            $this->addContent(Html::tag('h1',['style'=>"color:blue;"],"Testrun still running"));
+            $this->addContent(Html::tag('h1',['class'=>"color-blue;"],"Testrun still running"));
         }else{
-            $this->addContent(Html::tag('h1',['style'=>"color:red;"],"Testrun failed"));
+            $this->addContent(Html::tag('h1',['class'=>"color-red;"],"Testrun failed"));
         }
         if(isset($data['tests'])){
             $this->addContent(Html::tag('h1',"Summary"));
@@ -95,7 +93,7 @@ class TestrunController extends Controller
                     $this->addContent(Html::tag('h2',"Test"." ".$test['name']));
 
                     foreach ($test['commands'] as $command){
-                        $div = Html::tag('div',['style'=>'page-break-inside: avoid;']);
+                        $div = Html::tag('div',['class'=>'no-break']);
                         $titleText = $command['title'];
                         if(strlen($titleText) > 100){
                             $titleText = substr($titleText, 0,100)."...";
@@ -104,19 +102,19 @@ class TestrunController extends Controller
                             $title = Html::tag('h3',$titleText);
 
                         }else{
-                            $title = Html::tag('h3',['style'=>'color:red;'],$titleText);
+                            $title = Html::tag('h3',['class'=>'color-red;'],$titleText);
 
                         }
                         $div->add($title);
                         if(isset($command['img']) && file_exists($command['img'])){
-                            $image = Html::tag('img',['style'=>'max-with:100%;','src'=>'data:image/png;base64, '.base64_encode(file_get_contents($command['img']))]);
+                            $image = Html::tag('img',['class'=>'img-max-width','src'=>'data:image/png;base64, '.base64_encode(file_get_contents($command['img']))]);
                             $div->add($image);
                         }
 
                         $this->addContent($div);
                         $color = null;
                         if($command['status']!== "ok"){
-                            $color = ['style'=>"color:red;"];
+                            $color = ['class'=>"color-red;"];
 
                         }
 
@@ -139,7 +137,9 @@ class TestrunController extends Controller
     }
     public function newAction()
     {
-
+        if(!$this->Auth()->hasPermission("selenium/testrun/modify")){
+            throw new HttpException(401,"Not allowed!");
+        }
         $this->setTitle($this->translate('New Testrun'));
 
         $values = [];
@@ -172,7 +172,9 @@ class TestrunController extends Controller
 
     public function editAction()
     {
-
+        if(!$this->Auth()->hasPermission("selenium/testrun/modify")){
+            throw new HttpException(401,"Not allowed!");
+        }
         $this->setTitle($this->translate('Edit Testrun'));
 
         $id = $this->params->getRequired('id');

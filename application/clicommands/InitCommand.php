@@ -23,7 +23,7 @@ class InitCommand extends Command
     public function defaultAction()
     {
         if($this->params->get('with-commands') !== null){
-            if($fieldCat = $this->params->getRequired('field-category')){
+            if($fieldCat = $this->params->get('field-category')){
                 $this->Config('director')->setSection('datafield',['category_id']);
             }
         }

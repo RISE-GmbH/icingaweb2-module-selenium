@@ -98,10 +98,10 @@ class TestsuiteTable extends DataTable
                 return $data;
             },
             'renderer' => function ($data) {
-                $div = Html::tag("div", ['style' => 'white-space: nowrap;']);
+                $div = Html::tag("div", ['class'=>'action-column']);
 
                 $icon = new Icon('flask-vial', ['title' => mt('selenium', 'run all suites')]);
-                $a = Html::tag("a", ['target' => '_next', 'style' => 'padding-right:1em; display:inline;', 'href' => Url::fromPath('selenium/testsuite/run', ['id' => $data->id])]);
+                $a = Html::tag("a", ['target' => '_next', 'class'=>'action-item', 'href' => Url::fromPath('selenium/testsuite/run', ['id' => $data->id])]);
                 $a->add($icon);
                 $div->add($a);
                 return $div;
@@ -116,12 +116,12 @@ class TestsuiteTable extends DataTable
                 return $data;
             },
             'renderer' => function ($data) {
-                $div = Html::tag("div", ['style' => 'white-space: nowrap;']);
+                $div = Html::tag("div", ['class'=>'action-column']);
 
                 $content = json_decode($data->data, true);
                 foreach ($content['suites'] as $suite) {
                     $icon = new Icon('flask', ['title' => mt('selenium', 'run all tests from suite') . " " . $suite['name']]);
-                    $a = Html::tag("a", ['target' => '_next', 'style' => 'padding-right:1em; display:inline;', 'href' => Url::fromPath('selenium/testsuite/run', ['id' => $data->id, 'suite-ref' => $suite['id']])]);
+                    $a = Html::tag("a", ['target' => '_next', 'class'=>'action-item', 'href' => Url::fromPath('selenium/testsuite/run', ['id' => $data->id, 'suite-ref' => $suite['id']])]);
                     $a->add($icon);
                     $div->add($a);
                     $div->add(Html::tag("br"));
@@ -139,7 +139,7 @@ class TestsuiteTable extends DataTable
                 return $data;
             },
             'renderer' => function ($data) {
-                $div = Html::tag("div", ['style' => 'white-space: nowrap;']);
+                $div = Html::tag("div", ['class' => 'action-column']);
 
                 $content = json_decode($data->data, true);
                 foreach ($content['suites'] as $suite) {
@@ -147,7 +147,7 @@ class TestsuiteTable extends DataTable
                         foreach ($content['tests'] as $test) {
                             if ($test['id'] === $test_ref) {
                                 $icon = new Icon('vial-virus', ['title' => mt('selenium', 'run test') . " " . $test['name'] . " " . mt('selenium', 'from suite') . " " . $suite['name']]);
-                                $a = Html::tag("a", ['target' => '_next', 'style' => 'padding-right:1em; display:inline;', 'href' => Url::fromPath('selenium/testsuite/run', ['id' => $data->id, 'suite-ref' => $suite['id'], 'test-ref' => $test['id']])]);
+                                $a = Html::tag("a", ['target' => '_next', 'class' => 'action-item', 'href' => Url::fromPath('selenium/testsuite/run', ['id' => $data->id, 'suite-ref' => $suite['id'], 'test-ref' => $test['id']])]);
                                 $a->add($icon);
                                 $div->add($a);
                             }

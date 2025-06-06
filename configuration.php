@@ -68,13 +68,22 @@ $section->add(N_("Testrun"), array(
     'priority' => 40,
     'permission' => 'selenium/testrun',
 ));
+
+$section->add(N_('Activity Log'))
+    ->setUrl('selenium/activities')
+    ->setPermission('selenium/activity')
+    ->setPriority(50);
+
+
 $this->providePermission('selenium/project', $this->translate('allow access to projects'));
 $this->providePermission('selenium/testsuite', $this->translate('allow access to testsuites'));
 $this->providePermission('selenium/testrun', $this->translate('allow access to testruns'));
+$this->providePermission('selenium/activity', $this->translate('allow access to activities'));
 
 $this->providePermission('selenium/project/modify', $this->translate('allow access to modify projects'));
 $this->providePermission('selenium/testsuite/modify', $this->translate('allow access to modify testsuites'));
-$this->providePermission('selenium/testrun/modify', $this->translate('allow access to testruns'));
+$this->providePermission('selenium/testrun/modify', $this->translate('allow access to modify testruns'));
+$this->providePermission('selenium/activity/restore', $this->translate('allow access to restore activities'));
 
 
 $this->providePermission('selenium/service/restart', $this->translate('allow to restart selenium service'));

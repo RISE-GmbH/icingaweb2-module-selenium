@@ -120,3 +120,13 @@ or
 ```
 sudo -u www-data icingacli selenium set backend --name monitoring
 ```
+
+### Image path
+
+By default, the image path is `/etc/icingaweb2/modules/selenium/images` make sure this or that path that you set in the module settings have the following permissions:
+Use `nagios` or the actual user that runs your icinga process.
+Use `www-data` or the actual user that runs your webserver process.
+```
+chown -R nagios:icingaweb2  /etc/icingaweb2/modules/selenium/images
+chmod -R 770  /etc/icingaweb2/modules/selenium/images
+```

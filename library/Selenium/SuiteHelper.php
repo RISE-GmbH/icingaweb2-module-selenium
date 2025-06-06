@@ -35,7 +35,7 @@ class SuiteHelper
     protected $minimal;
 
     public static function supportedCommands(){
-        return ['setWindowSize','open', 'type','click','waitForElementNotPresent','waitForElementPresent','assertElementNotPresent','assertElementPresent','verifyElementNotPresent','verifyElementPresent'];
+        return ['verifyText', 'setWindowSize','open', 'type','click','waitForElementNotPresent','waitForElementPresent','assertElementNotPresent','assertElementPresent','verifyElementNotPresent','verifyElementPresent'];
     }
 
 
@@ -78,7 +78,8 @@ class SuiteHelper
         $this->removeImagesOnSuccess=$removeImagesOnSuccess;
         $this->imagepath=Module::get('selenium')->getConfig('config')->getSection('images')->get('path',Module::get('selenium')->getConfigDir().DIRECTORY_SEPARATOR."images");
 
-        $proxy=Module::get('selenium')->getConfig('config')->getSection('settings')->get('proxy');
+        $proxy = $suite->proxy;
+
         $http_proxy=null;
         $http_proxy_port=null;
         if($proxy != null && $proxy != ""){
@@ -284,6 +285,29 @@ class SuiteHelper
 
                             try {
                                 $response = $driver->wait(intval($command['value'])/1000)->until(WebDriverExpectedCondition::presenceOfElementLocated($this->webDriverByHelper($target)));
+                            }catch (\Throwable $e){
+                                $command['status']="failed";
+                                $command['reason']=$e->getMessage().$e->getTraceAsString();
+                                $success =false;
+                                $canceled = true;
+                            }
+
+                        }elseif($command['command'] == "verifyText"){
+
+                            $target = $command['target'];
+                            $value = trim($command['value']);
+
+                            try {
+                                $element = $driver->findElement($this->webDriverByHelper($target));
+                                $text = trim($element->getText());
+                                if($value != $text){
+                                    $success =false;
+                                    $canceled = true;
+                                    $command['status']="failed";
+                                    $command['reason']="$value does not match $text";
+
+                                }
+
                             }catch (\Throwable $e){
                                 $command['status']="failed";
                                 $command['reason']=$e->getMessage().$e->getTraceAsString();

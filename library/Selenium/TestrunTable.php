@@ -47,12 +47,12 @@ class TestrunTable extends DataTable
                                 $data->status = "failed";
                             }
                             if($data->status === "success"){
-                                return Html::tag("a",['style'=>'color:green'],$data->status );
+                                return Html::tag("a",['class'=>'color-green'],$data->status );
                             }elseif ($data->status === "running"){
-                                return Html::tag("a",['style'=>'color:blue'],$data->status );
+                                return Html::tag("a",['class'=>'color-blue'],$data->status );
 
                             }elseif ($data->status === "failed"){
-                                return Html::tag("a",['style'=>'color:red'],$data->status );
+                                return Html::tag("a",['class'=>'color-red'],$data->status );
 
                             }
                             return t("not set");
@@ -120,9 +120,9 @@ class TestrunTable extends DataTable
                 return $data;
             },
             'renderer' => function ($data) {
-                $div=Html::tag("div",['style'=>'white-space: nowrap;']);
+                $div=Html::tag("div",['class'=>'action-column']);
                 $icon=  new Icon('eye', ['title' => mt('selenium', 'view')]);
-                $a = Html::tag("a",['target'=>'_next', 'style'=>'padding-right:1em; display:inline;','href'=>Url::fromPath('selenium/testrun/view',['id'=>$data->id])]);
+                $a = Html::tag("a",['target'=>'_next', 'class'=>'action-item','href'=>Url::fromPath('selenium/testrun/view',['id'=>$data->id])]);
                 $a->add($icon);
                 $div->add($a);
                 $div->add(Html::tag("br"));

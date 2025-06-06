@@ -21,7 +21,7 @@ class IndexController extends CompatController
         $this->addContent(Html::tag('h2', 'What is Selenium?'));
         $quote = Html::tag('q', ['cite'=>"https://en.wikipedia.org/wiki/Selenium_(software)"],"Selenium is an open source umbrella project for a range of tools and libraries aimed at supporting browser automation. It provides a playback tool for authoring functional tests across most modern web browsers, without the need to learn a test scripting language (Selenium IDE).");
         $this->addContent(Html::tag('blockquote',null,$quote));
-        $this->addContent(Html::tag('p',['style'=>'text-align: right;']," - https://en.wikipedia.org/wiki/Selenium_(software)"));
+        $this->addContent(Html::tag('p',['class'=>'ta-right']," - https://en.wikipedia.org/wiki/Selenium_(software)"));
         $this->addContent(Html::tag('h2', 'Selenium IDE'));
         $this->addContent(Html::tag('p', 'The Selenium IDE is used to test and save a collenction of tests you want to execute.
         You can download the Selenium IDE here:'));
@@ -41,7 +41,7 @@ class IndexController extends CompatController
         $table =Html::tag('table',['class'=>'common-table']);
         $header =Html::tag('tr');
         $table->add($header);
-        $header->add(Html::tag('th',['style'=>'width:20em;'],'Resource'));
+        $header->add(Html::tag('th',['class'=>'w20em'],'Resource'));
         $header->add(Html::tag('th','Version'));
         $module =Html::tag('tr');
         $module->add(Html::tag('td','Selenium Icinga Module'));
@@ -65,7 +65,7 @@ class IndexController extends CompatController
         $table =Html::tag('table',['class'=>'common-table']);
         $header =Html::tag('tr');
         $table->add($header);
-        $header->add(Html::tag('th',['style'=>'width:20em;'],'Resource'));
+        $header->add(Html::tag('th',['class'=>'w20em'],'Resource'));
         $header->add(Html::tag('th','Status'));
         $header->add(Html::tag('th','Reason'));
         $header->add(Html::tag('th','Repair'));

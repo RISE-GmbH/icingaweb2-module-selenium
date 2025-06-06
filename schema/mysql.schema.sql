@@ -19,6 +19,7 @@ CREATE TABLE testsuite (
     project_id int(10) unsigned NOT NULL,
     generic        enum ('y', 'n')   DEFAULT 'n' NOT NULL,
     reference_object  TEXT DEFAULT NULL,
+    proxy text DEFAULT NULL,
     PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -46,5 +47,19 @@ CREATE TABLE selenium_schema (
     CONSTRAINT idx_enrollment_schema_version UNIQUE (version)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC;
 
+CREATE TABLE activity (
+      id int(10) unsigned NOT NULL AUTO_INCREMENT,
+      user  TEXT NOT NULL,
+      model  TEXT NOT NULL,
+      model_id  int(10) NOT NULL,
+      action  TEXT NOT NULL,
+      old  LONGTEXT NOT NULL,
+      new  LONGTEXT NOT NULL,
+      ctime bigint unsigned DEFAULT NULL,
+      mtime bigint unsigned DEFAULT NULL,
+      PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
 INSERT INTO selenium_schema (version, timestamp, success)
-VALUES ('0.1.9', UNIX_TIMESTAMP() * 1000, 'y');
+VALUES ('0.2.1', UNIX_TIMESTAMP() * 1000, 'y');

@@ -146,7 +146,7 @@ class SuggestObjectIdoController extends CompatController
             }
 
             foreach ($allServices as $row) {
-                $services[] = [$row->service_description , [$row->host_name."!".$row->service_description ]];
+                $services[] = [$row->host_name."!".$row->service_description , [$row->host_name."!".$row->service_description ]];
             }
 
 
