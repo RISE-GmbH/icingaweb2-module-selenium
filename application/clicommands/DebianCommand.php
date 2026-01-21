@@ -23,15 +23,37 @@ class DebianCommand extends Command
      */
     public function updateChromeAction()
     {
-        exec("apt-cache policy google-chrome-stable"." 2>&1", $output);
-
         $installed_pattern = '/Installed: (\d+\.\d+\.\d+\.\d+)-1/';
+        exec("apt-cache policy google-chrome-stable"." 2>&1", $output);
+        preg_match($installed_pattern, implode("\n",$output), $installed_matches);
+
+        if(count($installed_matches) == 0){
+            echo "Chrome is not installed.\n";
+            exit(2);
+        }
+        $installed_version = $installed_matches[1];
+
+        if($this->params->shift('--no-apt')  !== false){
+
+            $binary = Module::get('selenium')->getConfigDir().DIRECTORY_SEPARATOR."binaries".DIRECTORY_SEPARATOR.'chromedriver';
+
+            echo "Skipping apt check..\n";
+            $a = new BinaryHelper();
+            if($a->update()){
+                $driver = $a->getChromeDriverVersion($binary);
+                echo "Chrome is $installed_version, chrome driver updated to $driver\n";
+                exit(0);
+            }else{
+                echo "Something went wrong...";
+                exit(2);
+
+            }
+        }
+
         $candidate_pattern = '/Candidate: (\d+\.\d+\.\d+\.\d+)-1/';
 
-        preg_match($installed_pattern, implode("\n",$output), $installed_matches);
         preg_match($candidate_pattern, implode("\n",$output), $candidate_matches);
 
-        $installed_version = $installed_matches[1];
         $candidate_version = $candidate_matches[1];
 
         if($installed_version !== $candidate_version){

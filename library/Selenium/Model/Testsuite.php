@@ -136,7 +136,11 @@ class Testsuite extends DbModel
     public function beforeSave($db)
     {
         parent::beforeSave($db);
-        $this->generateActivity($db, 'modify');
+        if (!isset ($this->id) || $this->id === null) {
+            $this->generateActivity($db, 'create');
+        }else{
+            $this->generateActivity($db, 'modify');
+        }
 
 
     }
@@ -209,8 +213,6 @@ class Testsuite extends DbModel
                 }
             }
 
-            $activity->model_id = $this->id;
-
             if($mode == "delete"){
                 $new = [];
                 $activity->action = "delete";
@@ -224,7 +226,7 @@ class Testsuite extends DbModel
 
         }
 
-        if($mode == "modify"){
+        if($mode == "modify" || $mode == "create"){
             $newProject = Project::on($db)->filter(Filter::equal('id',$this->project_id))->first();
 
             $new = [];
@@ -269,7 +271,11 @@ class Testsuite extends DbModel
 
 
 
-        $activity->save(false);
+        if($mode != "create"){
+            $activity->model_id = $this->id;
+            $activity->save(false);
+        } // activity will be saved on after save
+
         $this->lastActivity = $activity;
     }
 

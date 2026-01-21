@@ -7,10 +7,13 @@ namespace Icinga\Module\Selenium;
 
 use DateTime;
 use Icinga\Authentication\Auth;
+use Icinga\Module\Selenium\Model\Project;
 use Icinga\Module\Selenium\Model\Testrun;
+use Icinga\Module\Selenium\Model\Testsuite;
 use Icinga\Web\Url;
 use ipl\Html\Html;
 use ipl\Orm\Model;
+use ipl\Orm\Query;
 use ipl\Web\Widget\Icon;
 
 /**
@@ -65,8 +68,11 @@ class TestrunTable extends DataTable
                             return $data;
                         },
                         'renderer' => function ($data) {
-                            if($data->project !== null){
-                                return $data->project->name;
+                            /* @var $data Project */
+
+                            $project = Project::findbyPrimaryKey($data->project_id);
+                            if($project !== null){
+                                return $project->name;
                             }
                             return t("not set");
                         }
@@ -78,8 +84,11 @@ class TestrunTable extends DataTable
                             return $data;
                         },
                         'renderer' => function ($data) {
-                            if($data->testsuite !== null){
-                                return $data->testsuite->name;
+                            /* @var $data Testrun */
+
+                            $testsuite = Testsuite::findbyPrimaryKey($data->testsuite_id);
+                            if($testsuite !== null){
+                                return $testsuite->name;
                             }
                             return t("not set");
                         }

@@ -44,7 +44,7 @@ CREATE TABLE selenium_schema (
     reason    text DEFAULT NULL,
 
     PRIMARY KEY (id),
-    CONSTRAINT idx_enrollment_schema_version UNIQUE (version)
+    CONSTRAINT idx_selenium_schema_version UNIQUE (version)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE activity (
@@ -60,6 +60,9 @@ CREATE TABLE activity (
       PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+ALTER TABLE testsuite ADD INDEX idx_testsuite_project_id (project_id);
+ALTER TABLE testrun ADD INDEX idx_testrun_project_id (project_id);
+ALTER TABLE testrun ADD INDEX idx_testrun_testsuite_id (testsuite_id);
 
 INSERT INTO selenium_schema (version, timestamp, success)
-VALUES ('0.2.1', UNIX_TIMESTAMP() * 1000, 'y');
+VALUES ('0.2.2', UNIX_TIMESTAMP() * 1000, 'y');

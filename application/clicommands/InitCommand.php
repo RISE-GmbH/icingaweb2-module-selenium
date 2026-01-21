@@ -27,6 +27,7 @@ class InitCommand extends Command
                 $this->Config('director')->setSection('datafield',['category_id']);
             }
         }
+
         $folders =[
             Module::get("selenium")->getConfigDir().DIRECTORY_SEPARATOR."binaries",
             Module::get("selenium")->getConfigDir().DIRECTORY_SEPARATOR."images",
@@ -38,7 +39,7 @@ class InitCommand extends Command
             }
         }
         $a = new BinaryHelper();
-        if($a->update()){
+        if($a->update($this->params->get('driverversion'))){
             echo "Init was successful\n";
         }else{
             echo "Init failed\n";

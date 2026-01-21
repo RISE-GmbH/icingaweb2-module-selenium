@@ -77,7 +77,12 @@ class Project extends DbModel
     public function beforeSave($db)
     {
         parent::beforeSave($db);
-        $this->generateActivity($db, 'modify');
+        if (!isset ($this->id) || $this->id === null) {
+            $this->generateActivity($db, 'create');
+        }else{
+            $this->generateActivity($db, 'modify');
+        }
+
 
 
     }
@@ -86,7 +91,7 @@ class Project extends DbModel
     {
         parent::afterSave($db);
 
-        $this->lastActivity->model_id =$this->id;
+        $this->lastActivity->model_id = $this->id;
         $this->lastActivity->save(false);
     }
 
@@ -134,22 +139,21 @@ class Project extends DbModel
                 }
             }
 
-            $activity->model_id = $this->id;
 
             if($mode == "delete"){
                 $new = [];
                 $activity->action = "delete";
+
             }
 
         }else{
             $old=[];
-
             $activity->action = "create";
 
 
         }
 
-        if($mode == "modify"){
+        if($mode == "modify" || $mode == "create"){
             $new = [];
             $new['name']=$this->name;
             $new['enabled']=$this->enabled;
@@ -176,8 +180,11 @@ class Project extends DbModel
 
 
 
+        if($mode != "create"){
+            $activity->model_id = $this->id;
+            $activity->save(false);
+        } // activity will be saved on after save
 
-        $activity->save(false);
         $this->lastActivity = $activity;
     }
 

@@ -50,7 +50,7 @@ class SeleniumDriverHealth extends HealthHook
                 $this->setMessage($this->getMessage() . "\n" . sprintf("ChromeDriver not the right version %s != %s",$chromeVersion,$driverVersion));
             }
         }else{
-            $this->setMessage($this->getMessage() . "\n" . sprintf("ChromeDriver version Ok %s == %s",$chromeVersion,$driverVersion));
+            $this->setMessage($this->getMessage() . "\n" . sprintf("ChromeDriver version OK %s ~ %s",$chromeVersion,$driverVersion));
         }
     }
 

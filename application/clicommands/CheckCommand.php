@@ -30,6 +30,8 @@ class CheckCommand extends Command
 
     public function defaultAction()
     {
+        //echo "Selenium disabled";
+        //exit(0);
         $db = Database::get();
         $project = $this->params->getRequired('project');
         $testsuite = $this->params->getRequired('testsuite');

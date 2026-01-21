@@ -1,0 +1,35 @@
+#!/bin/bash
+
+
+
+# Exit if not running as root
+if [ "$EUID" -ne 0 ]; then
+  echo "This script must be run as root. Exiting."
+  exit 1
+fi
+
+# Max allowed runtime in seconds (10 minutes)
+MAX_RUNTIME=$((10*60))
+
+# Loop over all chromedriver PIDs
+for CD_PID in $(pgrep -f chromedriver); do
+    echo "Checking Chromedriver PID: $CD_PID"
+
+    # Find all Chrome subprocesses spawned by this Chromedriver
+    # Using pstree -p to get descendants
+    CHROME_PIDS=$(pstree -p $CD_PID | grep -o 'chrome([0-9]\+)' | grep -o '[0-9]\+')
+
+    for PID in $CHROME_PIDS; do
+        # Get elapsed time in seconds
+        ELAPSED=$(ps -p $PID -o etimes=)
+
+        if [ -z "$ELAPSED" ]; then
+            continue   # Process may have exited
+        fi
+
+        if [ "$ELAPSED" -gt "$MAX_RUNTIME" ]; then
+            echo "Killing Chrome PID $PID (elapsed: $ELAPSED seconds)"
+            kill -9 $PID
+        fi
+    done
+done

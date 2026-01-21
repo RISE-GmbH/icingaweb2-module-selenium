@@ -14,9 +14,14 @@ if (Module::exists('monitoring')  ) {
 
 require_once 'vendor/autoload.php';
 
+if($this->getConfig()->get('health','driverversion',"1") === "1"){
+    $this->provideHook('health', 'SeleniumDriverHealth');
+}
 
-$this->provideHook('health', 'SeleniumDriverHealth');
-$this->provideHook('health', 'SeleniumServiceHealth');
+if($this->getConfig()->get('health','driverservice',"1") === "1"){
+    $this->provideHook('health', 'SeleniumServiceHealth');
+}
+
 
 $object_backend = \Icinga\Application\Config::module('selenium')->getSection('backend')->get('object');
 if($object_backend === "monitoring"){

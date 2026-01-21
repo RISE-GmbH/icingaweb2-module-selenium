@@ -56,6 +56,7 @@ class SuiteHelperIcingaDb extends SuiteHelper
                 Logger::error("generic selenium testsuite can not be rendered without a valid host or service!");
                 throw new \Exception("Host or Service not found!");
             }
+
             $this->data = json_decode($this->expandMacros($suite->data,$reference_object), true);
         }else{
             $this->data= json_decode($suite->data,true);

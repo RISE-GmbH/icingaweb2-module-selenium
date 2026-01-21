@@ -45,6 +45,19 @@ class ModuleconfigForm extends ConfigForm
 
         ]);
 
+        $this->addElement('checkbox', 'health_driverversion', [
+            'label' => $this->translate('Enable webdriver version Healthhook'),
+            'description' => $this->translate('Ths enables or disables the selenium webdriver version health hook'),
+            'value'=> '1'
+        ]);
+
+        $this->addElement('checkbox', 'health_driverservice', [
+            'label' => $this->translate('Enable webdriver service Healthhook'),
+            'description' => $this->translate('Ths enables or disables the selenium webdriver service health hook'),
+            'value'=> '1'
+        ]);
+
+
     }
 
 }

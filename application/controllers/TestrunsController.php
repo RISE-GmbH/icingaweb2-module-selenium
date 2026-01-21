@@ -53,9 +53,8 @@ class TestrunsController extends Controller
             return;
         }
 
-        $models = Testrun::on($conn)
-            ->with(['project','testsuite'])
-            ->withColumns([]);
+        $models = Testrun::on($conn);
+            //->with(['project']);
 
 
         $sortColumns = [

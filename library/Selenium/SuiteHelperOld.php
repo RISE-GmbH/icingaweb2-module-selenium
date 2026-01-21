@@ -281,8 +281,9 @@ class SuiteHelper
 
                 $flowStack = [];
                 $skipBlock = false;
-                $vars = [];
+
                 $canceled = false;
+                $vars = [];
                 $test['planned'] = true;
 
                 foreach ($test['commands'] as $commandKey => $command) {
@@ -322,49 +323,59 @@ class SuiteHelper
                     switch ($cmd) {
 
                         case 'if':
-                            if (!$skipBlock) {
+                            // Determine if this 'if' should be evaluated
+                            $executingIf = true;
+
+                            if (!($skipBlock)) {
                                 $expr = $command['target'];
-                                foreach ($vars as $k => $v) {
-                                    $expr = str_replace('${' . $k . '}', json_encode($v), $expr);
+                                foreach ($vars as $key => $val) {
+                                    $expr = str_replace('${' . $key . '}', json_encode($val), $expr);
                                 }
 
                                 try {
-                                    $result = (bool) $driver->executeScript("return !!($expr)");
+                                    $result = $driver->executeScript("return !!($expr)");
                                 } catch (\Throwable $e) {
                                     $result = false;
                                 }
 
-                                $flowStack[] = [
+                                array_push($flowStack, [
+                                    'type' => 'if',
                                     'executed' => $result,
                                     'skipping' => !$result,
-                                    'parentSkipped' => false, // 🔧 FIX
-                                ];
+                                ]);
                             } else {
-                                $flowStack[] = [
+                                array_push($flowStack, [
+                                    'type' => 'if',
                                     'executed' => false,
                                     'skipping' => true,
-                                    'parentSkipped' => true, // 🔧 FIX
-                                ];
-                                $command['status'] = 'skipped';
+                                ]);
+                                $executingIf = false;
                             }
 
-                            $skipBlock = end($flowStack)['skipping'];
+                            // Update skipBlock based on top of the stack
+                            $skipBlock = !empty($flowStack) ? end($flowStack)['skipping'] : false;
+
+                            // Mark the if command skipped only if parent is skipping
+                            if (!$executingIf) $command['status'] = 'skipped';
                             break;
 
-                        case 'elseif':
                         case 'else if':
+                        case 'elseif':
+                            if (empty($flowStack)) throw new \RuntimeException("Unexpected elseif without if");
+
                             $current = array_pop($flowStack);
 
-                            if ($current['executed'] || $current['parentSkipped']) { // 🔧 FIX
+                            if ($current['executed'] || $skipBlock) {
+                                // Previous branch executed OR parent block is skipping
                                 $current['skipping'] = true;
                             } else {
                                 $expr = $command['target'];
-                                foreach ($vars as $k => $v) {
-                                    $expr = str_replace('${' . $k . '}', json_encode($v), $expr);
+                                foreach ($vars as $key => $val) {
+                                    $expr = str_replace('${' . $key . '}', json_encode($val), $expr);
                                 }
 
                                 try {
-                                    $result = (bool) $driver->executeScript("return !!($expr)");
+                                    $result = $driver->executeScript("return !!($expr)");
                                 } catch (\Throwable $e) {
                                     $result = false;
                                 }
@@ -373,60 +384,55 @@ class SuiteHelper
                                 $current['skipping'] = !$result;
                             }
 
-                            $flowStack[] = $current;
-                            $skipBlock = $current['skipping'];
-                            if ($skipBlock) {
-                                $command['status'] = 'skipped';
-                            }
+                            array_push($flowStack, $current);
+                            $skipBlock = !empty($flowStack) ? end($flowStack)['skipping'] : false;
+
+                            if ($skipBlock) $command['status'] = 'skipped';
                             break;
 
                         case 'else':
+                            if (empty($flowStack)) {
+                                throw new \RuntimeException("Unexpected else without if");
+                            }
+
                             $current = array_pop($flowStack);
 
-                            if ($current['executed'] || $current['parentSkipped']) { // 🔧 FIX
+                            // Skip ELSE only if the corresponding IF/ELSEIF executed
+                            if ($current['executed']) {
                                 $current['skipping'] = true;
                             } else {
                                 $current['executed'] = true;
                                 $current['skipping'] = false;
                             }
 
-                            $flowStack[] = $current;
-                            $skipBlock = $current['skipping'];
-                            if ($skipBlock) {
+                            array_push($flowStack, $current);
+
+                            // Update skipBlock based on the new top of the stack
+                            $skipBlock = !empty($flowStack) ? end($flowStack)['skipping'] : false;
+
+                            if ($current['skipping']) {
                                 $command['status'] = 'skipped';
                             }
                             break;
 
                         case 'end':
-                            if (empty($flowStack)) {
-                                throw new \RuntimeException("Unexpected end without if");
-                            }
+                            if (empty($flowStack)) throw new \RuntimeException("Unexpected end without if");
 
-                            $closed = array_pop($flowStack);
+                            $closedBlock = array_pop($flowStack);
 
-                            // ✅ end is skipped ONLY if the IF itself was skipped by a parent
-                            if ($closed['parentSkipped']) {
-                                $command['status'] = 'skipped';
-                            } else {
-                                $command['status'] = 'ok';
-                            }
+                            // Mark 'end' as skipped only if the block itself was skipped
+                            $command['status'] = $closedBlock['skipping'] ? 'skipped' : 'ok';
 
-                            // recompute skipBlock from remaining stack
-                            $skipBlock = false;
-                            foreach ($flowStack as $frame) {
-                                if ($frame['skipping']) {
-                                    $skipBlock = true;
-                                    break;
-                                }
-                            }
+                            // Update skipBlock based on the new top of the stack
+                            $skipBlock = !empty($flowStack) ? end($flowStack)['skipping'] : false;
                             break;
 
                         default:
+                            // Execute real Selenium commands if the current block is not skipping
                             if ($skipBlock) {
                                 $command['status'] = 'skipped';
                                 break;
                             }
-
 
 
                             try {

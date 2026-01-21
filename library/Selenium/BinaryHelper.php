@@ -53,8 +53,10 @@ class BinaryHelper
         $binary = Module::get('selenium')->getConfigDir().DIRECTORY_SEPARATOR."binaries".DIRECTORY_SEPARATOR.'chromedriver';
         $version = $this->getChromeVersion("/usr/bin/google-chrome-stable");
         $driverVersion =$this->getChromeDriverVersion($binary);
+        $baseVersionDriver = preg_replace('/\.\d+$/', '', $driverVersion);
+        $baseVersion = preg_replace('/\.\d+$/', '', $version);
 
-        if($driverVersion === $version){
+        if(trim($baseVersion) == trim($baseVersionDriver)){
             return [false,$version,$driverVersion];
         }else{
             return [true,$version,$driverVersion];
@@ -71,31 +73,39 @@ class BinaryHelper
         $Request->setPath($path);
         $Request->setMethod("GET");
         $Response = $Connection->request($Request);
-        $filtered_data = array_filter($Response->json()['versions'], function($item) use ($version) {
-            return $item['version'] == $version;
+        $baseVersion = preg_replace('/\.\d+$/', '', $version);
+
+        $filtered_data = array_filter($Response->json()['versions'], function($item) use ($baseVersion) {
+            //return $item['version'] == $version;
+            return preg_match('/' . preg_quote($baseVersion, '/') . '/', $item['version']);
         });
 
         return  $filtered_data;
 
     }
-    public function update()
+    public function update($version = null)
     {
         $binary = Module::get('selenium')->getConfigDir().DIRECTORY_SEPARATOR."binaries".DIRECTORY_SEPARATOR.'chromedriver';
         $proxy = Module::get('selenium')->getConfig()->get('selenium','proxy');
         $platform ="linux64";
-        $version = $this->getChromeVersion("/usr/bin/google-chrome-stable");
-        if($version === "not found"){
-            return false;
+        if($version == null){
+            $version = $this->getChromeVersion("/usr/bin/google-chrome-stable");
+            if($version === "not found"){
+                return false;
+            }
         }
+
         $driverVersion = $this->getChromeDriverVersion($binary);
         if($driverVersion === $version){
             #return true;
         }
+
         $data = $this->getVersion($version);
         if(count($data) > 0){
             $entry=array_pop($data);
             Logger::info("Found matching chromedriver for $version");
             foreach($entry['downloads']['chromedriver'] as $driver){
+
                 if($driver['platform'] ==$platform){
                     $parsed_url = parse_url($driver['url']);
 
@@ -108,8 +118,10 @@ class BinaryHelper
                     $path = $parsed_url['path'];
                     $filename = basename($parsed_url['path']);
                     $filepath = Module::get('selenium')->getConfigDir().DIRECTORY_SEPARATOR."downloads".DIRECTORY_SEPARATOR.$filename;
-                    $binaries = Module::get('selenium')->getConfigDir().DIRECTORY_SEPARATOR."binaries".DIRECTORY_SEPARATOR.$version;
+                    $binaries = Module::get('selenium')->getConfigDir().DIRECTORY_SEPARATOR."binaries".DIRECTORY_SEPARATOR.$entry['version'];
+
                     $currentDriver = $binaries.DIRECTORY_SEPARATOR."chromedriver-linux64".DIRECTORY_SEPARATOR."chromedriver";
+
                     $host =$scheme."://".$host;
                     $Connection = new HttpClient($host,null, null,null,true, $proxy);
                     $Request = new Request();
@@ -119,8 +131,14 @@ class BinaryHelper
                     $zip = new ZipArchive;
                     $res = $zip->open($filepath);
                     if ($res === TRUE) {
+
                         $index = $zip->locateName('chromedriver-linux64/chromedriver'); // Locate the file within the archive
                         if ($index !== false) {
+                            $dir = $binaries.DIRECTORY_SEPARATOR;
+                            if(file_exists($dir)){
+                                exec(escapeshellcmd("rm -rf " . $dir)." > /dev/null &");
+                                sleep(2);
+                            }
                             // Extract the file to the specified location
                             if ($zip->extractTo($binaries)) {
                                 chmod($currentDriver,0755);
