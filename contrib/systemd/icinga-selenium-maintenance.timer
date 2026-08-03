@@ -1,0 +1,11 @@
+[Unit]
+Description=Run Selenium maintenance tmp cleanup hourly
+
+[Timer]
+OnBootSec=10min
+OnUnitActiveSec=1h
+AccuracySec=1min
+Persistent=true
+
+[Install]
+WantedBy=timers.target

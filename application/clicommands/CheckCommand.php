@@ -1,5 +1,8 @@
 <?php
 
+// SPDX-FileCopyrightText: 2026 Research Industrial Systems Engineering (RISE) Forschungs-, Entwicklungs- und Großprojektberatung GmbH
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 namespace Icinga\Module\Selenium\Clicommands;
 
 use Icinga\Application\Logger;
@@ -47,6 +50,8 @@ class CheckCommand extends Command
         $critical = $this->params->get('critical');
         $warning = $this->params->get('warning');
         $run_ref = $this->params->get('run-reference');
+        $check_source = $this->params->get('check-source');
+
 
         $object=null;
         if($host != null){
@@ -71,9 +76,9 @@ class CheckCommand extends Command
 
         $object_backend = \Icinga\Application\Config::module('selenium')->getSection('backend')->get('object');
         if($object_backend === "monitoring" && Module::exists('monitoring')){
-            $helper = new SuiteHelperIdo(Database::get(),$testsuiteModel,true,$withImages,$minimal,$removeImagesOnSuccess,$object);
+            $helper = new SuiteHelperIdo(Database::get(),$testsuiteModel,true,$withImages,$minimal,$removeImagesOnSuccess,$object,$check_source);
         }else{
-            $helper = new SuiteHelperIcingaDb(Database::get(),$testsuiteModel,true,$withImages,$minimal,$removeImagesOnSuccess,$object);
+            $helper = new SuiteHelperIcingaDb(Database::get(),$testsuiteModel,true,$withImages,$minimal,$removeImagesOnSuccess,$object,$check_source);
         }
 
 
