@@ -54,17 +54,18 @@ Testsuites contain the Selenium IDE tests. Use the Selenium IDE to generate a te
 ![module_new_testsuite](img/module_new_testsuite.png)
 
 
-| Option                | Required | Description                              |
-| --------------------- | -------- | -----------------------------------      |
-| Name                  | **yes**  | Name of the project                        |
-| Data               | no       | The Selenium IDE testdata                    |
-| Enabled               | no       | Enabled or disabled                    |
-| Generic               | no       | This option activates the Icinga object variable injection, you can use for example $host.name$ in your data field to generate generic testcases but apply host or service data to it. Using this makes the reference object required                    |
-| Created At            | no       | Time the project was created                 |
-| Modified At           | no       | Time the project was modified                    |
-| Sleep           | no       | The sleep time between the execution of a Selenium Command and the screenshot for the report                   |
-| Project           | no       | The project this test suites are mend for                   |
-| Reference Object           | no       | The reference object that will be queried for manual execution, make sure the Icinga object vars are present for this object             |
+| Option                | Required | Description                                                                                                                                                                                                                                                    |
+| --------------------- | -------- |----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Name                  | **yes**  | Name of the project                                                                                                                                                                                                                                            |
+| Data               | no       | The Selenium IDE testdata                                                                                                                                                                                                                                      |
+| Enabled               | no       | Enabled or disabled                                                                                                                                                                                                                                            |
+| Generic               | no       | This option activates the Icinga object variable injection, you can use for example $host.name$ in your data field to generate generic testcases but apply host or service data to it. Using this makes the reference object required                          |
+| Created At            | no       | Time the project was created                                                                                                                                                                                                                                   |
+| Modified At           | no       | Time the project was modified                                                                                                                                                                                                                                  |
+| Sleep           | no       | The sleep time between the execution of a Selenium Command and the screenshot for the report                                                                                                                                                                   |
+| Project           | no       | The project this test suites are mend for                                                                                                                                                                                                                      |
+| Reference Object           | no       | The reference object that will be queried for manual execution, make sure the Icinga object vars are present for this object                                                                                                                                   |
+| Override Variables File           | no       | Under this filepath the selenium module will look for a json file. This file should contain the variable as index with a value to insert. You can use Icinga Macros ($host...$, $service...$) here in case you want to specify the path in the host or service |
 
 
 In your IcingaWeb2 Role Settings you can filter by project.name using the IcingaDb filter syntax.

@@ -97,6 +97,17 @@ Here you can also decide if you want to query hosts for IcingaDb or ido (monitor
 
 ![module_backend](img/module_backend.png)
 
+## Module Configuration
+
+![module_config](img/module_configuration.png)
+
+In the Module Configuration tab you can set 
+* a default proxy
+* the image path
+* retention-policies (you need to run the cleanup command yourself)
+* enable / disable webdriver version health-hook
+* enable / disable webdriver service health-hook
+
 ## Config via CLI
 
 ### Select a database resource
@@ -130,3 +141,4 @@ Use `www-data` or the actual user that runs your webserver process.
 chown -R nagios:icingaweb2  /etc/icingaweb2/modules/selenium/images
 chmod -R 770  /etc/icingaweb2/modules/selenium/images
 ```
+

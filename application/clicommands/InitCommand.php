@@ -1,16 +1,14 @@
 <?php
 
+// SPDX-FileCopyrightText: 2026 Research Industrial Systems Engineering (RISE) Forschungs-, Entwicklungs- und Großprojektberatung GmbH
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 namespace Icinga\Module\Selenium\Clicommands;
 
-use Icinga\Application\Config;
-use Icinga\Application\Icinga;
-use Icinga\Application\Modules\Module;
 
+use Icinga\Application\Modules\Module;
 use Icinga\Cli\Command;
-use Icinga\Module\Director\CheckPlugin\Threshold;
 use Icinga\Module\Selenium\BinaryHelper;
-use Icinga\Module\Selenium\Common\Database;
 
 
 class InitCommand extends Command

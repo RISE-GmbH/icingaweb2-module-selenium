@@ -1,5 +1,8 @@
 <?php
-/* Icinga Web 2 Elasticsearch Module | (c) 2016 Icinga Development Team | GPLv2+ */
+
+// SPDX-FileCopyrightText: 2026 Research Industrial Systems Engineering (RISE) Forschungs-, Entwicklungs- und Großprojektberatung GmbH
+// SPDX-FileCopyrightText: 2016 Icinga GmbH <https://icinga.com> Elastic Module
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 namespace Icinga\Module\Selenium;
 

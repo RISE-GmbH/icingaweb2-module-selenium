@@ -19,6 +19,7 @@ CREATE TABLE testsuite (
     project_id int(10) unsigned NOT NULL,
     generic        enum ('y', 'n')   DEFAULT 'n' NOT NULL,
     reference_object  TEXT DEFAULT NULL,
+    override_vars_file  TEXT DEFAULT NULL,
     proxy text DEFAULT NULL,
     PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -29,6 +30,7 @@ CREATE TABLE testrun (
    status  TEXT NOT NULL,
    result  LONGTEXT NOT NULL,
    run_ref  TEXT DEFAULT NULL,
+   check_source  TEXT DEFAULT NULL,
    ctime bigint unsigned DEFAULT NULL,
    mtime bigint unsigned DEFAULT NULL,
    project_id int(10) unsigned NOT NULL,
@@ -65,4 +67,4 @@ ALTER TABLE testrun ADD INDEX idx_testrun_project_id (project_id);
 ALTER TABLE testrun ADD INDEX idx_testrun_testsuite_id (testsuite_id);
 
 INSERT INTO selenium_schema (version, timestamp, success)
-VALUES ('0.2.2', UNIX_TIMESTAMP() * 1000, 'y');
+VALUES ('0.2.4', UNIX_TIMESTAMP() * 1000, 'y');

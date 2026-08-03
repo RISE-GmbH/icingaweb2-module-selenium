@@ -1,4 +1,8 @@
 <?php
+
+// SPDX-FileCopyrightText: 2026 Research Industrial Systems Engineering (RISE) Forschungs-, Entwicklungs- und Großprojektberatung GmbH
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 /** @var $this \Icinga\Application\Modules\Module */
 
 use Icinga\Application\Modules\Module;

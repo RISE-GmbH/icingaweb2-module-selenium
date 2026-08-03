@@ -1,0 +1,18 @@
+[Unit]
+Description=Chrome tmp cleanup via icingacli
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+
+Environment="PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+# Dein Command
+ExecStart=/usr/bin/icingacli selenium maintenance tmp --minutes 60
+
+StandardOutput=journal
+StandardError=journal
+
+NoNewPrivileges=true
+PrivateTmp=false

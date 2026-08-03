@@ -2,6 +2,17 @@
 
 ## What's New
 
+### What's New in Version 0.3.3
+* composer dependecy update
+* added checksource to testrun
+
+### What's New in Version 0.3.2
+* introduction to override_vars_file
+* updated doc
+
+### What's New in Version 0.3.1
+* url check before open to not block chromedriver
+
 ### What's New in Version 0.3.0
 
 * if else end elseif logic
@@ -14,7 +25,7 @@
 
 ### What's New in Version 0.2.8
 
-* get closest chrome driver
+* get the closest chrome driver
 * fixed activity log on newly created objects
 
 ### What's New in Version 0.2.7

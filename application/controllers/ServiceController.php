@@ -1,5 +1,7 @@
 <?php
-// Icinga Reporting | (c) 2018 Icinga GmbH | GPLv2
+
+// SPDX-FileCopyrightText: 2026 Research Industrial Systems Engineering (RISE) Forschungs-, Entwicklungs- und Großprojektberatung GmbH
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 namespace Icinga\Module\Selenium\Controllers;
 
