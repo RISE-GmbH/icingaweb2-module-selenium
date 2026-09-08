@@ -41,9 +41,9 @@
             ),
         ),
         'symfony/process' => array(
-            'pretty_version' => 'v8.1.0',
-            'version' => '8.1.0.0',
-            'reference' => 'c4a9e58f235a6bf7f97ffbfedae2687353ac79e5',
+            'pretty_version' => 'v7.4.18',
+            'version' => '7.4.18.0',
+            'reference' => '058d17fc284cce14efb2385783b55014a461b176',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/process',
             'aliases' => array(),

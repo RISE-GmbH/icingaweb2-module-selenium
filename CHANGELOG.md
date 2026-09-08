@@ -2,6 +2,12 @@
 
 ## What's New
 
+### What's New in Version 0.3.5
+* downgraded "symfony/process": "^v7.4.18" 
+
+### What's New in Version 0.3.4
+* catch exception in DBMigrationHook
+
 ### What's New in Version 0.3.3
 * composer dependecy update
 * added checksource to testrun
